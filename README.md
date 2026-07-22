@@ -62,7 +62,7 @@ bash scripts/setup-moonlight-pi.sh --autostart --virtualhere --virtualhere-binar
 - can remove its managed TTY auto-start and boot config changes
 - optionally installs VirtualHere server from a local binary path
 
-The installer does not execute the Cloudsmith `setup.deb.sh` script at runtime. A copy is stored in [vendor/cloudsmith/setup.deb.sh](vendor/cloudsmith/setup.deb.sh) for audit/provenance, and the installer writes the apt source file itself using the vendored GPG key in [vendor/cloudsmith/gpg.2F6AE14E1C660D44.key](vendor/cloudsmith/gpg.2F6AE14E1C660D44.key).
+The installer does not execute the Cloudsmith `setup.deb.sh` script at runtime. A copy is stored in [vendor/cloudsmith/setup.deb.sh](vendor/cloudsmith/setup.deb.sh) for audit/provenance. The installer writes the apt source file from [vendor/cloudsmith/moonlight-game-streaming-moonlight-qt.list.template](vendor/cloudsmith/moonlight-game-streaming-moonlight-qt.list.template) and uses the vendored GPG key in [vendor/cloudsmith/gpg.2F6AE14E1C660D44.key](vendor/cloudsmith/gpg.2F6AE14E1C660D44.key).
 
 ## Recommended Moonlight Settings
 

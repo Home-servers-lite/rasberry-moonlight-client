@@ -15,6 +15,10 @@ These files are kept in the repository so the installer does not execute a remot
   - Used locally by `scripts/setup-moonlight-pi.sh` to create `/usr/share/keyrings/moonlight-game-streaming-moonlight-qt-archive-keyring.gpg`.
   - SHA256: `e3015be2637545f6aae825032c5d4e02b65f5b6d32010cbd4eab2cc4744d3dac`
 
+- `moonlight-game-streaming-moonlight-qt.list.template`
+  - Local apt source list template.
+  - The installer only replaces `{{CODENAME}}`, `{{MOONLIGHT_KEYRING_PATH}}`, and `{{MOONLIGHT_REPO_BASE_URL}}`.
+
 ## Source URLs
 
 - https://dl.cloudsmith.io/public/moonlight-game-streaming/moonlight-qt/setup.deb.sh

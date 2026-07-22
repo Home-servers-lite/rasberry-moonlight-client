@@ -1,0 +1,8 @@
+# Source: Moonlight Game Streaming
+# Site: https://github.com/moonlight-stream/moonlight-qt
+# Repository: Moonlight Game Streaming / Moonlight
+# Description: Open-source NVIDIA GameStream client
+# Managed by rasberry-moonlight-client. No remote setup script is executed.
+
+deb [signed-by={{MOONLIGHT_KEYRING_PATH}}] {{MOONLIGHT_REPO_BASE_URL}} {{CODENAME}} main
+deb-src [signed-by={{MOONLIGHT_KEYRING_PATH}}] {{MOONLIGHT_REPO_BASE_URL}} {{CODENAME}} main

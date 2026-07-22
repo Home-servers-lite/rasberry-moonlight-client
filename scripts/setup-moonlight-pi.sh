@@ -9,6 +9,7 @@ MOONLIGHT_KEYRING_PATH="/usr/share/keyrings/moonlight-game-streaming-moonlight-q
 MOONLIGHT_SOURCE_LIST_PATH="/etc/apt/sources.list.d/moonlight-game-streaming-moonlight-qt.list"
 VENDORED_CLOUDSMITH_SETUP_SCRIPT="$REPO_ROOT/vendor/cloudsmith/setup.deb.sh"
 VENDORED_CLOUDSMITH_GPG_KEY="$REPO_ROOT/vendor/cloudsmith/gpg.2F6AE14E1C660D44.key"
+VENDORED_CLOUDSMITH_SOURCE_TEMPLATE="$REPO_ROOT/vendor/cloudsmith/moonlight-game-streaming-moonlight-qt.list.template"
 VENDORED_CLOUDSMITH_SETUP_SHA256="f309187cea9dd45cd36f542e38cd84d415d5c1ef8972a8a2b9d49cdecb3d84a3"
 VENDORED_CLOUDSMITH_GPG_SHA256="e3015be2637545f6aae825032c5d4e02b65f5b6d32010cbd4eab2cc4744d3dac"
 
@@ -346,11 +347,12 @@ install_moonlight() {
 
 install_moonlight_repository() {
   local codename="$1"
-  local keyring_tmp source_tmp
+  local keyring_tmp source_tmp source_template
 
   log "Installing Moonlight apt repository from vendored Cloudsmith metadata..."
   verify_file_sha256 "$VENDORED_CLOUDSMITH_SETUP_SCRIPT" "$VENDORED_CLOUDSMITH_SETUP_SHA256"
   verify_file_sha256 "$VENDORED_CLOUDSMITH_GPG_KEY" "$VENDORED_CLOUDSMITH_GPG_SHA256"
+  [[ -f "$VENDORED_CLOUDSMITH_SOURCE_TEMPLATE" ]] || die "Required vendored file is missing: $VENDORED_CLOUDSMITH_SOURCE_TEMPLATE"
 
   keyring_tmp="$(mktemp)"
   source_tmp="$(mktemp)"
@@ -363,16 +365,11 @@ install_moonlight_repository() {
     sudo_run install -m 0644 "$keyring_tmp" "$MOONLIGHT_KEYRING_PATH"
   fi
 
-  {
-    printf '# Source: Moonlight Game Streaming\n'
-    printf '# Site: https://github.com/moonlight-stream/moonlight-qt\n'
-    printf '# Repository: Moonlight Game Streaming / Moonlight\n'
-    printf '# Description: Open-source NVIDIA GameStream client\n'
-    printf '# Managed by rasberry-moonlight-client. No remote setup script is executed.\n'
-    printf '\n'
-    printf 'deb [signed-by=%s] %s %s main\n' "$MOONLIGHT_KEYRING_PATH" "$MOONLIGHT_REPO_BASE_URL" "$codename"
-    printf 'deb-src [signed-by=%s] %s %s main\n' "$MOONLIGHT_KEYRING_PATH" "$MOONLIGHT_REPO_BASE_URL" "$codename"
-  } > "$source_tmp"
+  source_template="$(< "$VENDORED_CLOUDSMITH_SOURCE_TEMPLATE")"
+  source_template="${source_template//\{\{MOONLIGHT_KEYRING_PATH\}\}/$MOONLIGHT_KEYRING_PATH}"
+  source_template="${source_template//\{\{MOONLIGHT_REPO_BASE_URL\}\}/$MOONLIGHT_REPO_BASE_URL}"
+  source_template="${source_template//\{\{CODENAME\}\}/$codename}"
+  printf '%s\n' "$source_template" > "$source_tmp"
 
   sudo_run install -m 0644 "$source_tmp" "$MOONLIGHT_SOURCE_LIST_PATH"
 
